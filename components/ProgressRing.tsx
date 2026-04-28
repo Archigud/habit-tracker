@@ -24,11 +24,12 @@ export default function ProgressRing({
       aria-label={`Прогресс ${clamped}%`}
     >
       <svg width={size} height={size} className="-rotate-90">
+        {/* Track — uses CSS class so dark mode works */}
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="#e5e7eb"
+          className="stroke-[#e5e7eb] dark:stroke-[#374151]"
           strokeWidth={stroke}
           fill="none"
         />
@@ -45,7 +46,7 @@ export default function ProgressRing({
           style={{ transition: "stroke-dashoffset 600ms cubic-bezier(0.4,0,0.2,1)" }}
         />
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold tabular-nums text-ink">
+      <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold tabular-nums text-ink dark:text-gray-100">
         {label ?? `${clamped}%`}
       </span>
     </div>

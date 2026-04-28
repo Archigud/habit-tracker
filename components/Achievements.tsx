@@ -69,13 +69,13 @@ export default function Achievements({ habits }: Props) {
   ).length;
 
   return (
-    <section className="rounded-2xl border border-line bg-surface p-5 shadow-sm sm:p-6">
+    <section className="rounded-2xl border border-line dark:border-gray-700/60 bg-surface dark:bg-gray-900 p-5 shadow-sm sm:p-6">
       <header className="mb-5 flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold text-ink sm:text-lg">
+          <h2 className="text-base font-semibold text-ink dark:text-gray-100 sm:text-lg">
             Мои достижения
           </h2>
-          <p className="mt-0.5 text-xs text-muted">Прогресс за последние 7 дней</p>
+          <p className="mt-0.5 text-xs text-muted dark:text-gray-400">Прогресс за последние 7 дней</p>
         </div>
         <ProgressRing value={overall} size={64} stroke={6} />
       </header>
@@ -94,7 +94,7 @@ export default function Achievements({ habits }: Props) {
       </div>
 
       <div>
-        <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">
+        <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted dark:text-gray-500">
           Бейджи
         </h3>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -103,19 +103,16 @@ export default function Achievements({ habits }: Props) {
               key={b.id}
               className={`rounded-xl border p-3 text-center ${
                 b.unlocked
-                  ? "border-accent/30 bg-accentSoft/40"
-                  : "border-line bg-canvas opacity-60"
+                  ? "border-accent/30 dark:border-emerald-700/40 bg-accentSoft/40 dark:bg-emerald-900/20"
+                  : "border-line dark:border-gray-700 bg-canvas dark:bg-gray-800 opacity-50"
               }`}
               title={b.hint}
             >
-              <div
-                className={`text-2xl ${b.unlocked ? "" : "grayscale"}`}
-                aria-hidden
-              >
+              <div className={`text-2xl ${b.unlocked ? "" : "grayscale"}`} aria-hidden>
                 {b.emoji}
               </div>
-              <div className="mt-1 text-xs font-medium text-ink">{b.title}</div>
-              <div className="mt-0.5 text-[10px] leading-tight text-muted">
+              <div className="mt-1 text-xs font-medium text-ink dark:text-gray-200">{b.title}</div>
+              <div className="mt-0.5 text-[10px] leading-tight text-muted dark:text-gray-500">
                 {b.hint}
               </div>
             </div>
@@ -126,25 +123,17 @@ export default function Achievements({ habits }: Props) {
   );
 }
 
-function Stat({
-  label,
-  value,
-  hint,
-}: {
-  label: string;
-  value: string;
-  hint: string;
-}) {
+function Stat({ label, value, hint }: { label: string; value: string; hint: string }) {
   return (
-    <div className="rounded-xl bg-canvas p-3">
-      <div className="text-[10px] font-medium uppercase tracking-wide text-muted">
+    <div className="rounded-xl bg-canvas dark:bg-gray-800 p-3">
+      <div className="text-[10px] font-medium uppercase tracking-wide text-muted dark:text-gray-400">
         {label}
       </div>
       <div className="mt-1 flex items-baseline gap-1">
-        <span className="text-xl font-semibold tabular-nums text-ink">
+        <span className="text-xl font-semibold tabular-nums text-ink dark:text-gray-100">
           {value}
         </span>
-        <span className="text-xs text-muted">{hint}</span>
+        <span className="text-xs text-muted dark:text-gray-400">{hint}</span>
       </div>
     </div>
   );
