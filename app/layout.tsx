@@ -14,15 +14,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru" suppressHydrationWarning>
-      <head>
-        {/* Prevent flash of wrong theme */}
+      <body className="min-h-screen bg-canvas dark:bg-gray-950 font-sans text-ink dark:text-gray-100">
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem('habit-tracker:theme'),p=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(t===null&&p))document.documentElement.classList.add('dark')})()`,
+            __html: `(function(){try{var t=localStorage.getItem('habit-tracker:theme'),p=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(t===null&&p))document.documentElement.classList.add('dark')}catch(e){}})()`,
           }}
         />
-      </head>
-      <body className="min-h-screen bg-canvas dark:bg-gray-950 font-sans text-ink dark:text-gray-100">
         <ThemeProvider>
           {children}
         </ThemeProvider>
