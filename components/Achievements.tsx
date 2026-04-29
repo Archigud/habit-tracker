@@ -97,7 +97,7 @@ export default function Achievements({ habits }: Props) {
         <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted dark:text-gray-500">
           Бейджи
         </h3>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2">
           {badges.map((b) => (
             <div
               key={b.id}
