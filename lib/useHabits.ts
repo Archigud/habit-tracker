@@ -1,25 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Habit, STORAGE_KEY, todayKey } from "./types";
-
-function readStorage(): Habit[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed as Habit[];
-  } catch {
-    return [];
-  }
-}
-
-function writeStorage(habits: Habit[]) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(habits));
-}
+import { Habit, todayKey } from "./types";
 
 function makeId(): string {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
@@ -30,29 +12,39 @@ export function useHabits() {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setHabits(readStorage());
-    setHydrated(true);
+    fetch("/api/habits")
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => {
+        setHabits(Array.isArray(data) ? data : []);
+        setHydrated(true);
+      })
+      .catch(() => setHydrated(true));
   }, []);
 
-  useEffect(() => {
-    if (hydrated) writeStorage(habits);
-  }, [habits, hydrated]);
-
-  const addHabit = useCallback((name: string, emoji: string) => {
+  const addHabit = useCallback(async (name: string, emoji: string) => {
     const trimmed = name.trim();
     if (!trimmed) return;
+    const id = makeId();
     const habit: Habit = {
-      id: makeId(),
+      id,
       name: trimmed,
       emoji: emoji || "✨",
       createdAt: new Date().toISOString(),
       completions: [],
     };
+    // Optimistic update
     setHabits((prev) => [habit, ...prev]);
+
+    await fetch("/api/habits", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, name: trimmed, emoji: emoji || "✨" }),
+    });
   }, []);
 
-  const toggleToday = useCallback((id: string) => {
+  const toggleToday = useCallback(async (id: string) => {
     const day = todayKey();
+    // Optimistic update
     setHabits((prev) =>
       prev.map((h) => {
         if (h.id !== id) return h;
@@ -65,24 +57,21 @@ export function useHabits() {
         };
       }),
     );
+
+    await fetch(`/api/habits/${id}/toggle`, { method: "POST" });
   }, []);
 
-  const resetHabit = useCallback((id: string) => {
+  const resetHabit = useCallback(async (id: string) => {
     setHabits((prev) =>
       prev.map((h) => (h.id === id ? { ...h, completions: [] } : h)),
     );
+    await fetch(`/api/habits/${id}/reset`, { method: "POST" });
   }, []);
 
-  const deleteHabit = useCallback((id: string) => {
+  const deleteHabit = useCallback(async (id: string) => {
     setHabits((prev) => prev.filter((h) => h.id !== id));
+    await fetch(`/api/habits/${id}`, { method: "DELETE" });
   }, []);
 
-  return {
-    habits,
-    hydrated,
-    addHabit,
-    toggleToday,
-    resetHabit,
-    deleteHabit,
-  };
+  return { habits, hydrated, addHabit, toggleToday, resetHabit, deleteHabit };
 }

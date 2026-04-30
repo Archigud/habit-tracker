@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ThemeProvider from "@/components/ThemeProvider";
+import Providers from "@/components/Providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,9 +20,7 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem('habit-tracker:theme'),p=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(t===null&&p))document.documentElement.classList.add('dark')}catch(e){}})()`,
           }}
         />
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

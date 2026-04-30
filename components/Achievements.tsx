@@ -106,13 +106,14 @@ export default function Achievements({ habits }: Props) {
                   ? "border-accent/30 dark:border-emerald-700/40 bg-accentSoft/40 dark:bg-emerald-900/20"
                   : "border-line dark:border-gray-700 bg-canvas dark:bg-gray-800 opacity-50"
               }`}
-              title={b.hint}
             >
               <div className={`text-2xl ${b.unlocked ? "" : "grayscale"}`} aria-hidden>
                 {b.emoji}
               </div>
-              <div className="mt-1 text-xs font-medium text-ink dark:text-gray-200">{b.title}</div>
-              <div className="mt-0.5 text-[10px] leading-tight text-muted dark:text-gray-500">
+              <div className="mt-1 text-[11px] font-semibold leading-tight text-ink dark:text-gray-200 break-words">
+                {b.title}
+              </div>
+              <div className="mt-0.5 text-[10px] leading-tight text-muted dark:text-gray-500 break-words">
                 {b.hint}
               </div>
             </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { signOut, useSession } from "next-auth/react";
 import Achievements from "@/components/Achievements";
 import AddHabitForm from "@/components/AddHabitForm";
 import HabitCard from "@/components/HabitCard";
@@ -7,6 +8,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { useHabits } from "@/lib/useHabits";
 
 export default function Page() {
+  const { data: session } = useSession();
   const { habits, hydrated, addHabit, toggleToday, resetHabit, deleteHabit } =
     useHabits();
 
@@ -20,7 +22,7 @@ export default function Page() {
     <main className="mx-auto max-w-3xl px-4 py-8 sm:py-12">
       <header className="mb-8 sm:mb-10">
         <div className="flex items-start justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <p className="text-xs font-medium uppercase tracking-widest text-muted dark:text-gray-500">
               {today}
             </p>
@@ -31,7 +33,24 @@ export default function Page() {
               Маленькие шаги каждый день складываются в большие изменения.
             </p>
           </div>
-          <ThemeToggle />
+
+          <div className="flex shrink-0 items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              title={session?.user?.email ?? "Выйти"}
+              className="flex h-9 items-center gap-1.5 rounded-xl px-3 ring-1 ring-line dark:ring-gray-700 bg-surface dark:bg-gray-800 text-xs font-medium text-muted dark:text-gray-400 hover:bg-canvas dark:hover:bg-gray-700 hover:text-ink dark:hover:text-gray-100 active:scale-95"
+            >
+              <span className="max-w-[96px] truncate hidden sm:block">
+                {session?.user?.email}
+              </span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -68,7 +87,7 @@ export default function Page() {
       </div>
 
       <footer className="mt-12 text-center text-xs text-muted dark:text-gray-600">
-        Данные хранятся локально в вашем браузере.
+        Данные хранятся в защищённой базе данных Neon.
       </footer>
     </main>
   );
